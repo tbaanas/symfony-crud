@@ -8,7 +8,6 @@ use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\AppAuthenticator;
 use App\Security\EmailVerifier;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,14 +30,21 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
-    {
+    public function register(
+        
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        UserAuthenticatorInterface $userAuthenticator,
+        AppAuthenticator $authenticator,
+        EntityManagerInterface $entityManager
+    ): Response {
         $user = new User();
         $userDetails = new UserDetails();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
@@ -46,19 +52,24 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            // Wyczyść pole plainPassword
+           // $user->setPlainPassword(null);
             $user->setActivate(false);
             $user->setBanned(false);
-            $userDetails->setRegisterDate(new DateTime());
-            $userDetails->setRegisterIP("12.12.32.33");
+            $userDetails->setRegisterDate(new \DateTime());
+            
+            $userDetails->setRegisterIP($request->getClientIp());
             $userDetails->setEmailNotification(false);
             $userDetails->setPushNotification(false);
             $user->setUserDetails($userDetails);
-            $user->setRoles(["ROLE_USER"]);
+            $user->setRoles(['ROLE_USER']);
             $entityManager->persist($user);
             $entityManager->flush();
 
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email',
+                $user,
                 (new TemplatedEmail())
                     ->from(new Address('mailer@adsystem.org', 'Dojrzewamy.pl'))
                     ->to($user->getEmail())

@@ -32,8 +32,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
-    #[Assert\NotBlank]
     private ?string $password = null;
+
+    /**
+     * @var string|null
+     */
+    #[\Symfony\Component\Serializer\Annotation\Ignore]
+    private ?string $plainPassword;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
@@ -155,6 +160,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $plainPassword): void
+    {
+        $this->plainPassword = $plainPassword;
     }
 
     /**
@@ -294,12 +309,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setWarnings(?Warnings $warnings): self
     {
         // unset the owning side of the relation if necessary
-        if ($warnings === null && $this->warnings !== null) {
+        if (null === $warnings && null !== $this->warnings) {
             $this->warnings->setUser(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($warnings !== null && $warnings->getUser() !== $this) {
+        if (null !== $warnings && $warnings->getUser() !== $this) {
             $warnings->setUser($this);
         }
 

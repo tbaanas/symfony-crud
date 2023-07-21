@@ -6,29 +6,23 @@ use App\Dto\Conversion\QuestionConversion;
 use App\Dto\QuestionDto;
 use App\Entity\Question;
 use App\Entity\Tag;
-use App\Model\admin\AdminUsersService;
 use App\Repository\QuestionRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\Request;
+
 use function PHPUnit\Framework\isNull;
 
 class QuestionService
 {
-
-
-
-
-    public function __construct(public TagService $tagService,public QuestionConversion $converter,public QuestionRepository $questionRepository, public CategoryService $categoryService)
+    public function __construct(public TagService $tagService, public QuestionConversion $converter, public QuestionRepository $questionRepository, public CategoryService $categoryService)
     {
-
     }
 
     public function getOneQuestion(int $id): QuestionDto
     {
+        $question = $this->questionRepository->findBy(['id' => $id]);
 
-        $question=$this->questionRepository->findBy(["id"=>$id]);
         return $this->questionToDto($question);
-
     }
 
     public function getNewQuestionsMainPage(Request $request): Paginator
@@ -46,9 +40,8 @@ class QuestionService
             ->setFirstResult($request->query->getInt('page', 1) - 1)
             ->setMaxResults(20); // liczba pytań na stronę
 
-return $paginator;
+        return $paginator;
     }
-
 
     public function questionToDto(Question $question): QuestionDto
     {
@@ -64,20 +57,14 @@ return $paginator;
         $questionDto->setVotesMinus($question->getVotesMinus());
         $questionDto->setVotesPlus($question->getVotesPlus());
 
-
         return $questionDto;
-
     }
-
-
-
-
 
     public function dtoToQuestion(QuestionDto $questionDto): Question
     {
-        $question=$this->questionService->getOneQuestion($questionDto->getId());
-        if(!isNull($question)){
-            $question=new Question();
+        $question = $this->questionService->getOneQuestion($questionDto->getId());
+        if (!isNull($question)) {
+            $question = new Question();
             $question->setUser($this->userService->getOneUser($questionDto->getId()));
             $question->setCreatedDate(new DateTime());
         }
@@ -87,7 +74,7 @@ return $paginator;
         $question->setCategory($this->categoryService->getOneCategoryByName($questionDto->getCategory()));
         // Dodaj wszystkie tagi do pytania
         foreach ($questionDto->getTags() as $tagDto) {
-            //TODO
+            // TODO
             $tag = $this->tagService->getOneTag($tagDto->getId());
 
             if (!isNull($tag)) {
@@ -101,11 +88,6 @@ return $paginator;
             }
         }
 
-
-
         return $question;
-
     }
-
-
 }

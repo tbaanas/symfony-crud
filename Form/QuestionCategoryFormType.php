@@ -17,14 +17,14 @@ class QuestionCategoryFormType extends AbstractType
     {
         $this->categoryService = $categoryService;
     }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name',ChoiceType::class, [
+            ->add('name', ChoiceType::class, [
                 'choices' => $this->categoryService->getCategoriesOptions(),
                 'required' => true,
-                'label'=>false
-
+                'label' => false,
             ])
         ;
     }

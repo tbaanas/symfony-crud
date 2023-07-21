@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Entity\UserDetails;
-use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use JetBrains\PhpStorm\NoReturn;
@@ -12,7 +11,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
-use function PHPUnit\Framework\isNull;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -31,7 +29,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function save(User $entity, bool $flush = false): void
     {
-$temp=$this->findOneBy(['username' => $entity->getUsername()]);
+        $temp = $this->findOneBy(['username' => $entity->getUsername()]);
 
         $this->getEntityManager()->persist($entity);
 
@@ -39,7 +37,6 @@ $temp=$this->findOneBy(['username' => $entity->getUsername()]);
             $this->getEntityManager()->flush();
         }
     }
-
 
     public function findAllWhoAreNotBlockAndDelete(): array
     {
@@ -54,7 +51,6 @@ $temp=$this->findOneBy(['username' => $entity->getUsername()]);
         return $qb->getQuery()->getArrayResult();
     }
 
-
     public function findOneByAllDetailsId(int $id): ?array
     {
         $qb = $this->createQueryBuilder('u')
@@ -68,15 +64,15 @@ $temp=$this->findOneBy(['username' => $entity->getUsername()]);
         if (empty($result)) {
             throw new NotFoundHttpException('User not found.', null, 404);
         }
-        if ($result[0][0]->getBirthDate() != null) {
-            $today = new DateTime();
+        if (null != $result[0][0]->getBirthDate()) {
+            $today = new \DateTime();
             $age = $today->diff($result[0][0]->getBirthDate())->y;
         }
 
         $data = [
             'user' => $result[0],
             'userDetails' => $result[0][0],
-            'userAge' => $age
+            'userAge' => $age,
         ];
 
         return empty($result) ? null : $data;
@@ -84,7 +80,6 @@ $temp=$this->findOneBy(['username' => $entity->getUsername()]);
 
     public function remove(User $entity, bool $flush = false): void
     {
-
         $this->getEntityManager()->remove($entity);
 
         if ($flush) {
@@ -92,16 +87,14 @@ $temp=$this->findOneBy(['username' => $entity->getUsername()]);
         }
     }
 
-    #[NoReturn] private function updateRole(User $entity): void
+    #[NoReturn]
+    private function updateRole(User $entity): void
     {
-
-
         $user = $this->findOneBy(['username' => $entity->getUsername()]);
 
         $user->setRoles(['']);
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
-
     }
 
     /**
@@ -118,34 +111,33 @@ $temp=$this->findOneBy(['username' => $entity->getUsername()]);
         $this->save($user, true);
     }
 
-//    /**
-//     * @return User[] Returns an array of User objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return User[] Returns an array of User objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('u')
+    //            ->andWhere('u.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('u.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?User
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?User
+    //    {
+    //        return $this->createQueryBuilder('u')
+    //            ->andWhere('u.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
     public function update(User $entity, bool $flush)
     {
-
-        if($entity->getRoles()!=null){
+        if (null != $entity->getRoles()) {
             $this->updateRole($entity);
         }
         $this->getEntityManager()->persist($entity);
@@ -162,7 +154,6 @@ $temp=$this->findOneBy(['username' => $entity->getUsername()]);
             ->where('u.banned = :banned')
             ->setParameter('banned', true);
 
-
         return $qb->getQuery()->getArrayResult();
     }
 
@@ -173,8 +164,6 @@ $temp=$this->findOneBy(['username' => $entity->getUsername()]);
             ->where('u.banned = :banned')
             ->setParameter('banned', true);
 
-
         return $qb->getQuery()->getArrayResult();
     }
-
 }

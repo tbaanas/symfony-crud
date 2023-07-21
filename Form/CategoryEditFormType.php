@@ -3,12 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Categories;
-use App\Entity\CategorySeoData;
 use App\Service\CategoryService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,27 +18,23 @@ class CategoryEditFormType extends AbstractType
     {
         $this->categoryService = $categoryService;
     }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-
-
-
-
-
         $builder
-            ->add('parent', EntityType::class,[
+            ->add('parent', EntityType::class, [
                 'required' => true,
-                'label'=>false,
+                'label' => false,
                 'class' => Categories::class,
-               'choice_label'=>'name',
+               'choice_label' => 'name',
             ])
             ->add('name', TextType::class, [
                 'required' => false,
-                'label'=>false
+                'label' => false,
             ])
-            ->add('categorySeoData',CategorySeoDataFormType::class,[
+            ->add('categorySeoData', CategorySeoDataFormType::class, [
                 'required' => false,
-                'label'=>false
+                'label' => false,
             ])
         ;
     }

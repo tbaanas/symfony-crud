@@ -17,7 +17,7 @@ class QuestionComment
     private ?int $id = null;
 
     #[ORM\Column(length: 500)]
-    private ?string $content= null;
+    private ?string $content = null;
 
     #[ORM\ManyToOne(inversedBy: 'questionComments')]
     #[ORM\JoinColumn(nullable: false)]

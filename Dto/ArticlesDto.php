@@ -3,31 +3,23 @@
 namespace App\Dto;
 
 use App\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 class ArticlesDto
 {
     private ?int $tempId = null;
 
-
     private ?string $title = null;
-
 
     private ?string $content = null;
 
-
     private ?\DateTimeImmutable $createdAt = null;
-
 
     private ?\DateTimeImmutable $updatedAt = null;
 
-
     private ?User $author = null;
 
-
     private Collection $articleComments;
-
 
     private Collection $tags;
 
@@ -121,8 +113,6 @@ class ArticlesDto
         return $this;
     }
 
-
-
     /**
      * @return Collection<int, Tag>
      */
@@ -140,5 +130,4 @@ class ArticlesDto
 
         return $this;
     }
-
 }

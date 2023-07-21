@@ -1,9 +1,8 @@
 <?php
 
-
 namespace App;
+
 use OpenAI\Client;
-use OpenAI\Symfony;
 
 final class OpenAI
 {
@@ -19,7 +18,7 @@ final class OpenAI
     }
 
     /**
-     * Creates a new factory instance to configure a custom Open AI Client
+     * Creates a new factory instance to configure a custom Open AI Client.
      */
     public static function factory(): Factory
     {

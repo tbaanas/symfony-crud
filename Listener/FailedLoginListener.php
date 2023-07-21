@@ -2,11 +2,10 @@
 
 namespace App\Listener;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
-
 use Symfony\Component\Security\Http\SecurityEvents;
-use Psr\Log\LoggerInterface;
 
 class FailedLoginListener implements EventSubscriberInterface
 {
@@ -20,15 +19,16 @@ class FailedLoginListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
+           
            // SecurityEvents::AUTHENTICATION_FAILURE => 'onAuthenticationFailure',
         ];
     }
 
     public function onAuthenticationFailure(AuthenticationFailureEvent $event)
     {
-// Rejestrowanie błędu logowania
+        // Rejestrowanie błędu logowania
         $authenticationException = $event->getAuthenticationException();
         $username = $event->getAuthenticationToken()->getUsername();
-        $this->logger->error('Nieudane logowanie użytkownika: ' . $username, ['exception' => $authenticationException]);
+        $this->logger->error('Nieudane logowanie użytkownika: '.$username, ['exception' => $authenticationException]);
     }
 }

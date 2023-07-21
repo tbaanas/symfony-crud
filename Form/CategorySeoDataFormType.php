@@ -16,19 +16,19 @@ class CategorySeoDataFormType extends AbstractType
         $builder
             ->add('metaTitle', TextType::class, [
                 'required' => false,
-                'label'=>false
+                'label' => false,
             ])
             ->add('metaDescription', TextareaType::class, [
                 'required' => false,
-                'label'=>false
+                'label' => false,
             ])
             ->add('metaKeywords', TextType::class, [
                 'required' => false,
-                'label'=>false
+                'label' => false,
             ])
             ->add('seoDescription', TextareaType::class, [
                 'required' => false,
-                'label'=>false,
+                'label' => false,
                 'attr' => [
                     'id' => 'tinymce-mytextarea',
                 ],

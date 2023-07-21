@@ -8,12 +8,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ArticleCategoryService
 {
-
-
-
     public function __construct(public ArticleCategoryRepository $repository)
     {
-
     }
 
     /*
@@ -26,52 +22,50 @@ class ArticleCategoryService
 
     public function getOneCategory(int $id): ArticleCategory
     {
-        return $this->repository->findOneBy(['id'=>$id]);
+        return $this->repository->findOneBy(['id' => $id]);
     }
 
     public function getOneCategoryByName(string $name): ?ArticleCategory
     {
-        return $this->repository->findOneBy(['name'=>$name]);
+        return $this->repository->findOneBy(['name' => $name]);
     }
 
     public function update(ArticleCategory $getData): bool
     {
-        $this->repository->save($getData,true);
+        $this->repository->save($getData, true);
+
         return true;
     }
 
     public function delete(int $id, bool $isGranted): bool
     {
+        $categoryToDelete = $this->repository->findOneBy(['id' => $id]);
 
-        $categoryToDelete = $this->repository->findOneBy(['id'=>$id]);
-
-        if ($categoryToDelete === null) {
+        if (null === $categoryToDelete) {
             throw new NotFoundHttpException('Category not exist.', null, 404);
         }
-        if ($isGranted && $categoryToDelete != null) {
+        if ($isGranted && null != $categoryToDelete) {
             $this->repository->remove($categoryToDelete, true);
+
             return true;
         }
-        return false;
 
+        return false;
     }
 
     public function getCategoriesOptions(): array
     {
         $categories = $this->repository->findAll();
-        $categoryOptions = array();
+        $categoryOptions = [];
         foreach ($categories as $category) {
             $categoryOptions[$category->getName()] = $category->getName();
         }
+
         return $categoryOptions;
     }
 
-    public function getCategoryById($categoryId):ArticleCategory
+    public function getCategoryById($categoryId): ArticleCategory
     {
         return $this->repository->find($categoryId);
     }
-
-
-
-
 }

@@ -20,7 +20,7 @@ class LoginHistoryController extends AbstractController
     public function index(): Response
     {
         return $this->render('admin/login_history/index.html.twig', [
-            'histories' => $this->service->viewHistory()
+            'histories' => $this->service->viewHistory(),
         ]);
     }
 }

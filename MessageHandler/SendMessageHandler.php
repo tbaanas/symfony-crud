@@ -8,11 +8,8 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 class SendMessageHandler
 {
-    public function __invoke(SendMessage $message){
-
+    public function __invoke(SendMessage $message)
+    {
+      
     }
-
-
-
-
 }

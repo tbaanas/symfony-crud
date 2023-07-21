@@ -16,8 +16,6 @@ class Categories
     #[ORM\Column]
     private ?int $id = null;
 
-
-
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     private ?string $name = null;
@@ -44,8 +42,6 @@ class Categories
     {
         return $this->id;
     }
-
-
 
     public function getName(): ?string
     {
